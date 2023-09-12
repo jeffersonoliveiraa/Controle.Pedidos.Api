@@ -1,5 +1,7 @@
 ﻿using Controle.Pedidos.Api.Context;
 using Controle.Pedidos.Api.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Controle.Pedidos.Api.Services;
 
@@ -19,19 +21,100 @@ public class PedidosServise : IPedidosService
             if (pedido.Clientes!.Ativo == false)
                 return 0;
 
+            pedido.Faturado = false;
+
             foreach (var item in pedido.Produtos!)
             {
-                //Criar exclusão de produtos onde o atributo ativo seja igual a false
+                if (item.Ativo == false)
+                {
+                    pedido.Produtos.Remove(item);
+                }
             }
 
             _context.Add(pedido);
             await _context.SaveChangesAsync();
 
             return 1;
-
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"Error: {ex}");
+            throw;
+        }
+    }
+
+    public async Task<int> DeletePedido(Pedido pedido)
+    {
+        try
+        {
+            _context.Pedidos!.Remove(pedido);
+            await _context.SaveChangesAsync();
+
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex}");
+            throw;
+        }
+    }
+
+    public async Task<Pedido> GetPedido(int id)
+    {
+        try
+        {
+            var pedido = await _context.Pedidos!.FindAsync(id);
+
+            return pedido!;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Pedido>> GetPedidos()
+    {
+        try
+        {
+            return await _context.Pedidos!.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Pedido>> GetPedidosByNomeCliente(string nome)
+    {
+        IEnumerable<Pedido> pedidos;
+
+        if (!string.IsNullOrWhiteSpace(nome))
+        {
+            pedidos = await _context.Pedidos!.Where(n => n.Clientes!.Nome!.Contains(nome)).ToListAsync();
+        }
+        else
+        {
+            pedidos = await GetPedidos();
+        }
+
+        return pedidos;
+    }
+
+    public async Task<int> UpdatePedido(Pedido pedido)
+    {
+        try
+        {
+            _context.Entry(pedido).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
             throw;
         }
     }
