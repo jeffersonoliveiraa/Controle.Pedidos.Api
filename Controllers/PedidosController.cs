@@ -26,7 +26,7 @@ public class PedidosController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao obter pedidos: {ex.Message}");    
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao obter pedidos: {ex.Message}");
         }
     }
 
@@ -71,6 +71,63 @@ public class PedidosController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao obter pedido: {ex.Message}");
+        }
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<Pedido>> CreatePedido([FromBody] Pedido pedido)
+    {
+        try
+        {
+            await _pedidosService.CreatePedido(pedido);
+            return Ok(pedido);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao criar pedido: {ex.Message}");
+        }
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdatePedido([FromBody] Pedido pedido)
+    {
+        try
+        {
+            await _pedidosService.UpdatePedido(pedido);
+            return Ok(pedido);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao atualizar pedido: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeletePedido(int id)
+    {
+        try
+        {
+            var pedido = await _pedidosService.GetPedido(id);
+
+            if (pedido != null)
+            {
+                await _pedidosService.DeletePedido(pedido);
+                return Ok($"Pedido com o id = {id} excluido com sucesso");
+            }
+            else
+            {
+                return NotFound($"Pedido com id = {id} não existe");
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao excluir pedido: {ex.Message}");
         }
     }
 }
