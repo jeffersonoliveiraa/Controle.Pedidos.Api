@@ -1,4 +1,6 @@
-﻿using Controle.Pedidos.Api.Entities;
+﻿using Controle.Pedidos.Api.AsyncDataServices;
+using Controle.Pedidos.Api.Dtos;
+using Controle.Pedidos.Api.Entities;
 using Controle.Pedidos.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +10,12 @@ namespace Controle.Pedidos.Api.Controllers;
 public class PedidosController : ControllerBase
 {
     private readonly IPedidosService _pedidosService;
+    private readonly IMessageBusClient _messageBusClient;
 
-    public PedidosController(IPedidosService pedidosService)
+    public PedidosController(IPedidosService pedidosService, IMessageBusClient messageBusClient)
     {
         _pedidosService = pedidosService;
+        _messageBusClient = messageBusClient;
     }
 
     [HttpGet]
@@ -128,6 +132,43 @@ public class PedidosController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao excluir pedido: {ex.Message}");
+        }
+    }
+
+    [HttpPut("id")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateFaturarPedido(int id)
+    {
+        try
+        {
+            PedidoFaturadoPublishedDto pedidoFaturado = new();
+
+            var pedido = await _pedidosService.GetPedido(id);
+
+            if(pedido != null)
+            {
+                foreach (var item in pedido.Produtos!)
+                {
+                    pedidoFaturado.ValorTotalPedido += item.Valor;   
+                }
+                pedidoFaturado.Evento = "Pedido_Faturamento";
+                _messageBusClient.PublishPedidoFaturado(pedidoFaturado);
+
+                pedido.Faturado = true;
+
+                await _pedidosService.UpdatePedido(pedido);
+
+                return Ok($"Pedido com o id = {id} faturado com sucesso");
+            }
+            else
+            {
+                return NotFound($"Pedido com id = {id} não existe");
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao faturar pedido: {ex.Message}");
         }
     }
 }
