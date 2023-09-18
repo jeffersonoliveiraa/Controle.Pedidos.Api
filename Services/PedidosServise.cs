@@ -1,7 +1,6 @@
 ﻿using Controle.Pedidos.Api.Context;
 using Controle.Pedidos.Api.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Controle.Pedidos.Api.Services;
 
