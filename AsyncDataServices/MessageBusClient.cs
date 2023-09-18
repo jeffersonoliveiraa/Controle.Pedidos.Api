@@ -16,7 +16,7 @@ public class MessageBusClient : IMessageBusClient
         _configuration = configuration;
         _connection = new ConnectionFactory() { HostName = "localhost", Port = 5672 }.CreateConnection();
         _channel = _connection.CreateModel();
-        _channel.ExchangeDeclare(exchange: "trigger", type: ExchangeType.Fanout);
+        _channel.ExchangeDeclare(exchange: "faturar", type: ExchangeType.Fanout);
     }
 
     public void PublishPedidoFaturado(PedidoFaturadoPublishedDto pedido)

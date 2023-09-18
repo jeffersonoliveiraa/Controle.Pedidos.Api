@@ -135,7 +135,7 @@ public class PedidosController : ControllerBase
         }
     }
 
-    [HttpPut("id")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateFaturarPedido(int id)
