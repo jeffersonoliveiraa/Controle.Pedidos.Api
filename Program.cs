@@ -1,3 +1,4 @@
+using Controle.Pedidos.Api.AsyncDataServices;
 using Controle.Pedidos.Api.Context;
 using Controle.Pedidos.Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ var configuration = builder.Configuration;
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddScoped<IPedidosService, PedidosServise>();
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
 builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
 

@@ -247,3 +247,5 @@ C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.A
 C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.Api\Controle.Pedidos.Api\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.Api\Controle.Pedidos.Api\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.Api\Controle.Pedidos.Api\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.Api\Controle.Pedidos.Api\bin\Debug\net6.0\RabbitMQ.Client.dll
+C:\Users\jeffe\OneDrive\Documentos\Slides curso CSharp\Aula13\Controle.Pedidos.Api\Controle.Pedidos.Api\bin\Debug\net6.0\System.Threading.Channels.dll
