@@ -29,7 +29,7 @@ public class MessageBusClient : IMessageBusClient
     {
         var body = Encoding.UTF8.GetBytes(message);
 
-        _channel.BasicPublish(exchange: "trigger",
+        _channel.BasicPublish(exchange: "faturar",
                         routingKey: "",
                         basicProperties: null,
                         body: body);
